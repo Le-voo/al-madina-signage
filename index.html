@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Al Madina Food Store — Digital Menu Board. Fresh Halal Meat. Highest Quality.">
+  <meta name="description" content="Al Madina Food Store — Digital Menu Board. Fresh Halal Meat.">
   <title>Al Madina Food Store — Digital Menu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,7 +12,7 @@
 </head>
 <body>
 
-  <!-- Decorative string lights -->
+  <!-- String lights -->
   <div class="lights" aria-hidden="true">
     <div class="lights-wire"></div>
     <div class="lights-bulbs">
@@ -21,23 +21,22 @@
       <span></span><span></span><span></span><span></span><span></span>
       <span></span><span></span><span></span><span></span><span></span>
       <span></span><span></span><span></span><span></span><span></span>
-      <span></span><span></span><span></span><span></span><span></span>
     </div>
   </div>
 
-  <!-- Background layers -->
+  <!-- Background -->
   <div class="slideshow-bg" id="slideshowBg" aria-hidden="true"></div>
   <div class="wood-overlay" aria-hidden="true"></div>
 
-  <!-- Animal silhouette watermark -->
+  <!-- Animal silhouette -->
   <div class="animal-silhouette" id="animalSilhouette" aria-hidden="true"></div>
 
-  <!-- Corner product photos -->
+  <!-- Corner photos (for lamb/beef boards) -->
   <div class="corner-photos" id="cornerPhotos" aria-hidden="true"></div>
 
   <div class="app" id="app">
 
-    <!-- ── HEADER ── -->
+    <!-- HEADER -->
     <header class="header">
       <div class="open-hours-badge">
         <span class="badge-label">Open Hours</span>
@@ -58,26 +57,20 @@
       </div>
     </header>
 
-    <!-- ── MEAT PHOTO STRIP ── -->
-    <div class="meat-strip" id="meatStrip" aria-hidden="true">
-      <img src="assets/meat_hero.jpg" alt="" class="meat-strip-img">
-      <div class="meat-strip-overlay"></div>
-    </div>
-
-    <!-- ── PROMO BANNER (optional) ── -->
+    <!-- Promo banner (hidden by default) -->
     <div class="promo-banner hidden" id="promoBanner">
       <p id="promoBannerText"></p>
     </div>
 
-    <!-- ── MENU ── -->
+    <!-- MENU -->
     <main class="menu-section">
       <div class="menu-grid" id="menuGrid" role="list" aria-label="Menu prices"></div>
 
-      <!-- Navigation -->
+      <!-- Page navigation -->
       <nav class="page-nav" id="pageNav" aria-label="Menu pages">
-        <a href="#chicken" class="nav-item" data-page="chicken">🍗 Chicken</a>
-        <a href="#lamb" class="nav-item" data-page="lamb">🐑 Lamb</a>
-        <a href="#beef" class="nav-item" data-page="beef">🥩 Beef</a>
+        <a href="#chicken" class="nav-item" data-page="chicken">Chicken</a>
+        <a href="#lamb"    class="nav-item" data-page="lamb">Lamb</a>
+        <a href="#beef"    class="nav-item" data-page="beef">Beef</a>
       </nav>
 
       <div class="status-indicator" id="statusIndicator" aria-live="polite">
@@ -86,7 +79,7 @@
       </div>
     </main>
 
-    <!-- ── FOOTER ── -->
+    <!-- FOOTER -->
     <footer class="footer">
       <div class="footer-left">
         <span class="footer-badge">★ Highest Quality</span>
