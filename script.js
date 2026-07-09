@@ -84,7 +84,9 @@
     if (hashIndex !== -1) {
       startPage = hashIndex;
     } else {
-      window.location.hash = CONFIG.PAGES[0].id;
+      // Use replaceState to set hash WITHOUT firing a hashchange event
+      const defaultId = CONFIG.PAGES[0].id;
+      history.replaceState(null, '', '#' + defaultId);
     }
 
     showPage(startPage, false);
@@ -120,7 +122,8 @@
   function handleHashRoute() {
     const hash = window.location.hash.substring(1).toLowerCase();
     const pageIndex = CONFIG.PAGES.findIndex(p => p.id === hash);
-    if (pageIndex !== -1) {
+    // Guard: skip if already on this page to prevent double-render
+    if (pageIndex !== -1 && pageIndex !== currentPageIndex) {
       showPage(pageIndex, true);
     }
   }
