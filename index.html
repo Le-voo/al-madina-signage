@@ -4,15 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Al Madina Food Store — Digital Menu Board">
-  <title>Al Madina Food Store — Chicken Menu</title>
+  <title>Al Madina Food Store — Digital Menu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- Decorative string lights -->
   <div class="lights" aria-hidden="true">
     <div class="lights-wire"></div>
     <div class="lights-bulbs">
@@ -23,34 +22,31 @@
     </div>
   </div>
 
-  <!-- Chicken silhouette decoration -->
-  <div class="chicken-silhouette" aria-hidden="true">
-    <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
-      <path d="M120 30 C140 10 170 20 175 45 C180 65 165 80 150 85 L155 100 C160 115 150 130 135 135 L130 150 C125 158 110 160 100 155 L85 150 C70 145 60 130 65 115 L70 100 C55 95 40 80 45 60 C50 35 80 25 100 35 C105 32 112 30 120 30 Z" fill="currentColor"/>
-      <circle cx="155" cy="50" r="6" fill="currentColor" opacity="0.3"/>
-      <path d="M75 55 C65 50 55 55 50 65 C45 75 50 85 60 88" fill="none" stroke="currentColor" stroke-width="3" opacity="0.4"/>
-    </svg>
-  </div>
+  <div class="animal-silhouette" id="animalSilhouette" aria-hidden="true"></div>
+
+  <div class="corner-photos" id="cornerPhotos" aria-hidden="true"></div>
 
   <div class="slideshow-bg" id="slideshowBg" aria-hidden="true"></div>
   <div class="wood-overlay" aria-hidden="true"></div>
 
   <div class="app" id="app">
 
-    <!-- Header -->
     <header class="header">
-      <div class="header-left">
-        <img src="assets/logo.png" alt="Store Logo" class="logo" id="storeLogo">
-        <div class="store-info">
-          <p class="store-name" id="storeName">AL MADINA FOOD STORE</p>
-          <h1 class="main-title" id="mainTitle">CHICKEN</h1>
-          <p class="subtitle" id="subtitle">Fresh • Quality • Halal</p>
-        </div>
+      <div class="open-hours-badge">
+        <span class="badge-label">Open Hours</span>
+        <span class="badge-value" id="openHours">8AM - 10PM</span>
       </div>
+
+      <div class="header-center">
+        <p class="store-name" id="storeName">AL MADINA FOOD STORE</p>
+        <h1 class="main-title" id="mainTitle">CHICKEN</h1>
+        <p class="list-price" id="pageSubtitle">List PRICE!</p>
+      </div>
+
       <div class="header-right">
         <div class="halal-badge">
-          <span class="halal-icon">☪</span>
-          <span>HALAL<br>CERTIFIED</span>
+          <span class="halal-ar">حلال</span>
+          <span class="halal-en">Halal</span>
         </div>
         <div class="weather-widget hidden" id="weatherWidget">
           <span class="weather-temp" id="weatherTemp">--°</span>
@@ -59,24 +55,28 @@
       </div>
     </header>
 
-    <!-- Promotional Banner -->
     <div class="promo-banner hidden" id="promoBanner">
       <p id="promoBannerText"></p>
     </div>
 
-    <!-- Main Menu Grid -->
     <main class="menu-section">
-      <div class="menu-grid" id="menuGrid" role="list" aria-label="Chicken menu prices">
-        <!-- Cards injected by script.js -->
-      </div>
+      <div class="menu-grid" id="menuGrid" role="list" aria-label="Menu prices"></div>
+      <nav class="page-nav" id="pageNav" aria-label="Menu pages">
+        <a href="#chicken" class="nav-item" data-page="chicken">Chicken</a>
+        <a href="#lamb" class="nav-item" data-page="lamb">Lamb</a>
+        <a href="#beef" class="nav-item" data-page="beef">Beef</a>
+      </nav>
       <div class="status-indicator" id="statusIndicator" aria-live="polite">
         <span class="status-dot"></span>
         <span class="status-text">Loading menu…</span>
       </div>
     </main>
 
-    <!-- Today's Offer + QR -->
     <section class="extras-row">
+      <div class="quality-seal">
+        <span class="seal-star">★</span>
+        <span class="seal-text">HQ<br>Highest Quality</span>
+      </div>
       <div class="offer-card hidden" id="offerCard">
         <p class="offer-label">Today's Offer</p>
         <p class="offer-product" id="offerProduct">—</p>
@@ -89,7 +89,6 @@
       </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
       <div class="footer-left">
         <span class="footer-badge">Highest Quality</span>

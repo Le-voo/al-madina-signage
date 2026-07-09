@@ -10,14 +10,15 @@ A professional digital menu board for Smart TVs. Prices are managed entirely thr
 
 ## Features
 
+- **3 rotating pages** — Chicken, Lamb, Beef (auto-switch every 15 seconds)
 - Automatically loads menu from Google Sheets
 - Updates every 30 seconds (configurable)
-- Smooth fade animation when prices change
+- Smooth fade animation when pages and prices change
 - Full-screen friendly for Smart TVs
 - No scrolling — everything fits on one screen
+- Product photos support (corner images + per-item images)
 - Offline fallback with cached data
-- Promotional banner, Today's Offer, WhatsApp QR code
-- Optional weather widget and background slideshow
+- Today's Offer, WhatsApp QR code
 - Full-screen toggle button
 
 ---
@@ -25,18 +26,19 @@ A professional digital menu board for Smart TVs. Prices are managed entirely thr
 ## Quick Start
 
 1. Clone or download this project
-2. Create your Google Sheet (see below)
+2. Create your Google Sheet with 3 tabs (see below)
 3. Paste your Sheet ID into `config.js`
-4. Deploy to GitHub Pages, Netlify, or Vercel
-5. Open the URL on your Smart TV in full-screen mode
+4. Upload product photos to `assets/lamb/` and `assets/beef/`
+5. Deploy to GitHub Pages, Netlify, or Vercel
+6. Open the URL on your Smart TV in full-screen mode
 
 ---
 
 ## 1. Create Your Google Sheet
 
-Create a new Google Sheet with two tabs:
+Create **3 tabs** in one Google Sheet:
 
-### Tab: `Menu`
+### Tab: `Sheet1` (Chicken)
 
 | Product | Price |
 |---------|-------|
@@ -50,15 +52,75 @@ Create a new Google Sheet with two tabs:
 | Boneless Thighs | £5.99/kg |
 | Gizzard/Liver/Heart | £2.99/kg |
 
-- Row 1 must be the header row (`Product`, `Price`)
-- Data starts from row 2
-- Edit prices here anytime — the TV display updates automatically
+### Tab: `Lamb`
 
-### Tab: `Offers` (optional)
+| Product | Price |
+|---------|-------|
+| Leg | £11.99/kg |
+| Shoulder | £11.49/kg |
+| Chops | £12.99/kg |
+| Neck | £9.99/kg |
+| Back | £10.99/kg |
+| Ribs | £8.99/kg |
+| Mince | £8.99/kg |
+| Mix | £9.99/kg |
+| Sheep Leg | £9.99/kg |
+| Sheep Shoulder | £9.49/kg |
+| Sheep Boneless | £11.99/kg |
+| Sheep Mix | £8.99/kg |
+| Lamb Boneless | £14.99/kg |
+
+### Tab: `Beef`
+
+| Product | Price |
+|---------|-------|
+| Neck | £9.49/kg |
+| Boneless | £11.99/kg |
+| Brisket | £8.99/kg |
+| Oxtail | £11.99/kg |
+| Stomach/Abodi/Skin | £4.49/kg |
+| Cow Foot | £3.99/kg |
+| Mince | £9.99/kg |
+
+### Tab: `Offer` (optional — Today's Special)
 
 | Product | Price | Note |
 |---------|-------|------|
 | Whole Chicken | £4.99/kg | Today's Special |
+
+- Row 1 = headers (`Product`, `Price`)
+- Data starts from row 2
+- Optional column C = image filename (e.g. `leg.jpg`)
+
+---
+
+## Upload Product Photos
+
+Add photos to these folders, then push to GitHub:
+
+```
+assets/
+├── lamb/
+│   ├── photo1.jpg   ← top-left corner
+│   ├── photo2.jpg   ← top-right corner
+│   ├── photo3.jpg   ← bottom-left corner
+│   └── photo4.jpg   ← bottom-right corner
+└── beef/
+    ├── photo1.jpg
+    ├── photo2.jpg
+    ├── photo3.jpg
+    └── photo4.jpg
+```
+
+After uploading photos, run:
+
+```powershell
+git add assets/
+git commit -m "Add product photos"
+git push
+```
+
+To change rotation speed, edit `PAGE_ROTATION_MS` in `config.js` (default: 15000 = 15 seconds per page).
 
 ---
 
