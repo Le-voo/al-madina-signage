@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Al Madina Food Store — Digital Menu Board">
+  <meta name="description" content="Al Madina Food Store — Digital Menu Board. Fresh Halal Meat. Highest Quality.">
   <title>Al Madina Food Store — Digital Menu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <!-- Decorative string lights -->
   <div class="lights" aria-hidden="true">
     <div class="lights-wire"></div>
     <div class="lights-bulbs">
@@ -19,18 +20,24 @@
       <span></span><span></span><span></span><span></span><span></span>
       <span></span><span></span><span></span><span></span><span></span>
       <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span><span></span>
     </div>
   </div>
 
-  <div class="animal-silhouette" id="animalSilhouette" aria-hidden="true"></div>
-
-  <div class="corner-photos" id="cornerPhotos" aria-hidden="true"></div>
-
+  <!-- Background layers -->
   <div class="slideshow-bg" id="slideshowBg" aria-hidden="true"></div>
   <div class="wood-overlay" aria-hidden="true"></div>
 
+  <!-- Animal silhouette watermark -->
+  <div class="animal-silhouette" id="animalSilhouette" aria-hidden="true"></div>
+
+  <!-- Corner product photos -->
+  <div class="corner-photos" id="cornerPhotos" aria-hidden="true"></div>
+
   <div class="app" id="app">
 
+    <!-- ── HEADER ── -->
     <header class="header">
       <div class="open-hours-badge">
         <span class="badge-label">Open Hours</span>
@@ -48,50 +55,41 @@
           <span class="halal-ar">حلال</span>
           <span class="halal-en">Halal</span>
         </div>
-        <div class="weather-widget hidden" id="weatherWidget">
-          <span class="weather-temp" id="weatherTemp">--°</span>
-          <span class="weather-desc" id="weatherDesc">--</span>
-        </div>
       </div>
     </header>
 
+    <!-- ── MEAT PHOTO STRIP ── -->
+    <div class="meat-strip" id="meatStrip" aria-hidden="true">
+      <img src="assets/meat_hero.jpg" alt="" class="meat-strip-img">
+      <div class="meat-strip-overlay"></div>
+    </div>
+
+    <!-- ── PROMO BANNER (optional) ── -->
     <div class="promo-banner hidden" id="promoBanner">
       <p id="promoBannerText"></p>
     </div>
 
+    <!-- ── MENU ── -->
     <main class="menu-section">
       <div class="menu-grid" id="menuGrid" role="list" aria-label="Menu prices"></div>
+
+      <!-- Navigation -->
       <nav class="page-nav" id="pageNav" aria-label="Menu pages">
-        <a href="#chicken" class="nav-item" data-page="chicken">Chicken</a>
-        <a href="#lamb" class="nav-item" data-page="lamb">Lamb</a>
-        <a href="#beef" class="nav-item" data-page="beef">Beef</a>
+        <a href="#chicken" class="nav-item" data-page="chicken">🍗 Chicken</a>
+        <a href="#lamb" class="nav-item" data-page="lamb">🐑 Lamb</a>
+        <a href="#beef" class="nav-item" data-page="beef">🥩 Beef</a>
       </nav>
+
       <div class="status-indicator" id="statusIndicator" aria-live="polite">
         <span class="status-dot"></span>
         <span class="status-text">Loading menu…</span>
       </div>
     </main>
 
-    <section class="extras-row">
-      <div class="quality-seal">
-        <span class="seal-star">★</span>
-        <span class="seal-text">HQ<br>Highest Quality</span>
-      </div>
-      <div class="offer-card hidden" id="offerCard">
-        <p class="offer-label">Today's Offer</p>
-        <p class="offer-product" id="offerProduct">—</p>
-        <p class="offer-price" id="offerPrice">—</p>
-        <p class="offer-note" id="offerNote"></p>
-      </div>
-      <div class="qr-card hidden" id="qrCard">
-        <img src="" alt="WhatsApp order QR code" class="qr-image" id="qrImage">
-        <p class="qr-label">Order via WhatsApp</p>
-      </div>
-    </section>
-
+    <!-- ── FOOTER ── -->
     <footer class="footer">
       <div class="footer-left">
-        <span class="footer-badge">Highest Quality</span>
+        <span class="footer-badge">★ Highest Quality</span>
         <span class="footer-divider">|</span>
         <span class="footer-badge">Halal Certified</span>
       </div>

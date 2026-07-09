@@ -1,13 +1,12 @@
 /**
- * Al Madina Food Store — Digital Signage Script
- * Multi-page menu board with Google Sheets CMS and auto-rotation.
+ * Al Madina Food Store — Digital Signage Script v2
+ * Multi-page menu board with Google Sheets CMS and manual page routing.
  */
 
 (function () {
   'use strict';
 
   const STORAGE_PREFIX = 'alMadina_';
-  const OFFER_KEY = STORAGE_PREFIX + 'offer';
 
   const SILHOUETTES = {
     chicken: `<svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
@@ -36,45 +35,36 @@
   let isTransitioning = false;
 
   const els = {
-    storeName: document.getElementById('storeName'),
-    mainTitle: document.getElementById('mainTitle'),
-    pageSubtitle: document.getElementById('pageSubtitle'),
-    openHours: document.getElementById('openHours'),
-    menuGrid: document.getElementById('menuGrid'),
-    pageNav: document.getElementById('pageNav'),
-    statusIndicator: document.getElementById('statusIndicator'),
-    animalSilhouette: document.getElementById('animalSilhouette'),
-    cornerPhotos: document.getElementById('cornerPhotos'),
-    promoBanner: document.getElementById('promoBanner'),
-    promoBannerText: document.getElementById('promoBannerText'),
-    offerCard: document.getElementById('offerCard'),
-    offerProduct: document.getElementById('offerProduct'),
-    offerPrice: document.getElementById('offerPrice'),
-    offerNote: document.getElementById('offerNote'),
-    qrCard: document.getElementById('qrCard'),
-    qrImage: document.getElementById('qrImage'),
-    weatherWidget: document.getElementById('weatherWidget'),
-    weatherTemp: document.getElementById('weatherTemp'),
-    weatherDesc: document.getElementById('weatherDesc'),
-    footerDate: document.getElementById('footerDate'),
-    footerClock: document.getElementById('footerClock'),
-    fullscreenBtn: document.getElementById('fullscreenBtn'),
-    slideshowBg: document.getElementById('slideshowBg'),
-    app: document.getElementById('app')
+    storeName:      document.getElementById('storeName'),
+    mainTitle:      document.getElementById('mainTitle'),
+    pageSubtitle:   document.getElementById('pageSubtitle'),
+    openHours:      document.getElementById('openHours'),
+    menuGrid:       document.getElementById('menuGrid'),
+    pageNav:        document.getElementById('pageNav'),
+    statusIndicator:document.getElementById('statusIndicator'),
+    animalSilhouette:document.getElementById('animalSilhouette'),
+    cornerPhotos:   document.getElementById('cornerPhotos'),
+    promoBanner:    document.getElementById('promoBanner'),
+    promoBannerText:document.getElementById('promoBannerText'),
+    footerDate:     document.getElementById('footerDate'),
+    footerClock:    document.getElementById('footerClock'),
+    fullscreenBtn:  document.getElementById('fullscreenBtn'),
+    slideshowBg:    document.getElementById('slideshowBg'),
+    app:            document.getElementById('app')
   };
+
+  // ─── Init ───────────────────────────────────────────────────────────
 
   function init() {
     applyBranding();
     setupNavigation();
     setupPromoBanner();
-    setupWhatsAppQR();
-    setupWeather();
     setupSlideshow();
     setupFullscreen();
     startClock();
 
     CONFIG.PAGES.forEach(page => {
-      const cached = loadFromStorage(storageKey(page.id));
+      const cached = loadFromStorage(STORAGE_PREFIX + page.id);
       pageData[page.id] = cached && cached.length ? cached : page.fallback;
     });
 
@@ -84,19 +74,13 @@
     if (hashIndex !== -1) {
       startPage = hashIndex;
     } else {
-      // Use replaceState to set hash WITHOUT firing a hashchange event
-      const defaultId = CONFIG.PAGES[0].id;
-      history.replaceState(null, '', '#' + defaultId);
+      history.replaceState(null, '', '#' + CONFIG.PAGES[0].id);
     }
 
     showPage(startPage, false);
     fetchAllPages();
-    fetchOffer();
 
-    refreshTimer = setInterval(() => {
-      fetchAllPages();
-      fetchOffer();
-    }, CONFIG.REFRESH_INTERVAL_MS);
+    refreshTimer = setInterval(fetchAllPages, CONFIG.REFRESH_INTERVAL_MS);
 
     if (CONFIG.AUTO_ROTATE) {
       rotationTimer = setInterval(() => {
@@ -106,14 +90,14 @@
     }
   }
 
-  function storageKey(pageId) {
-    return STORAGE_PREFIX + pageId;
-  }
+  // ─── Branding ───────────────────────────────────────────────────────
 
   function applyBranding() {
     els.storeName.textContent = CONFIG.STORE_NAME;
     els.openHours.textContent = CONFIG.OPEN_HOURS;
   }
+
+  // ─── Navigation & Routing ───────────────────────────────────────────
 
   function setupNavigation() {
     window.addEventListener('hashchange', handleHashRoute);
@@ -122,7 +106,6 @@
   function handleHashRoute() {
     const hash = window.location.hash.substring(1).toLowerCase();
     const pageIndex = CONFIG.PAGES.findIndex(p => p.id === hash);
-    // Guard: skip if already on this page to prevent double-render
     if (pageIndex !== -1 && pageIndex !== currentPageIndex) {
       showPage(pageIndex, true);
     }
@@ -173,10 +156,11 @@
     });
   }
 
+  // ─── Corner Photos ──────────────────────────────────────────────────
+
   function renderCornerPhotos(page) {
     els.cornerPhotos.innerHTML = '';
     if (!page.cornerImages || !page.cornerImages.length) return;
-
     const positions = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
     page.cornerImages.forEach((filename, i) => {
       if (!filename) return;
@@ -189,7 +173,7 @@
     });
   }
 
-  // ─── Google Sheets ───────────────────────────────────────────────
+  // ─── Google Sheets ──────────────────────────────────────────────────
 
   function buildSheetUrl(sheetName) {
     const id = CONFIG.GOOGLE_SHEET_ID;
@@ -213,12 +197,12 @@
     return rows.map(row => {
       const cells = row.c || [];
       const product = cells[0]?.v;
-      const price = cells[1]?.v;
-      const image = cells[2]?.v;
+      const price   = cells[1]?.v;
+      const image   = cells[2]?.v;
       if (!product || !price) return null;
 
       const productStr = String(product).trim();
-      const priceStr = String(price).trim();
+      const priceStr   = String(price).trim();
       if (productStr.toLowerCase() === 'product' || priceStr.toLowerCase() === 'price') return null;
       if (productStr.startsWith('A (') || productStr.startsWith('B (')) return null;
 
@@ -243,7 +227,7 @@
           const old = pageData[page.id] || [];
           const changed = hasMenuChanged(menu, old);
           pageData[page.id] = menu;
-          saveToStorage(storageKey(page.id), menu);
+          saveToStorage(STORAGE_PREFIX + page.id, menu);
           anyLive = true;
 
           if (page.id === getCurrentPage().id) {
@@ -255,45 +239,28 @@
       }
     }
 
-    if (anyLive) {
-      setStatus('Live — updated ' + formatTime(new Date()), 'live');
-    } else {
-      setStatus('Offline — showing cached menu', 'offline');
-    }
+    setStatus(
+      anyLive
+        ? 'Live — updated ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false })
+        : 'Offline — showing cached menu',
+      anyLive ? 'live' : 'offline'
+    );
   }
 
-  async function fetchOffer() {
-    if (!CONFIG.OFFERS_ENABLED) return;
-
-    try {
-      const offers = await fetchSheet(CONFIG.OFFERS_SHEET_NAME);
-      if (offers.length > 0) {
-        displayOffer(offers[0]);
-        saveToStorage(OFFER_KEY, offers[0]);
-        return;
-      }
-    } catch (_) {
-      const cached = loadFromStorage(OFFER_KEY);
-      if (cached) { displayOffer(cached); return; }
-    }
-
-    displayOffer(CONFIG.OFFER_FALLBACK);
-  }
-
-  // ─── Rendering ───────────────────────────────────────────────────
+  // ─── Rendering ──────────────────────────────────────────────────────
 
   function hasMenuChanged(newMenu, oldMenu) {
     if (newMenu.length !== oldMenu.length) return true;
     return newMenu.some((item, i) =>
       item.product !== oldMenu[i]?.product ||
-      item.price !== oldMenu[i]?.price ||
-      item.image !== oldMenu[i]?.image
+      item.price   !== oldMenu[i]?.price   ||
+      item.image   !== oldMenu[i]?.image
     );
   }
 
   function renderMenu(items, page, animate) {
     els.menuGrid.innerHTML = '';
-    els.menuGrid.dataset.page = page.id;
+    els.menuGrid.dataset.page  = page.id;
     els.menuGrid.dataset.count = items.length;
 
     items.forEach((item, index) => {
@@ -323,14 +290,7 @@
     });
   }
 
-  function displayOffer(offer) {
-    els.offerCard.classList.remove('hidden');
-    els.offerProduct.textContent = offer.product;
-    els.offerPrice.textContent = offer.price;
-    els.offerNote.textContent = offer.note || '';
-  }
-
-  // ─── Features ────────────────────────────────────────────────────
+  // ─── Promo Banner ───────────────────────────────────────────────────
 
   function setupPromoBanner() {
     if (!CONFIG.PROMO_BANNER_ENABLED || !CONFIG.PROMO_BANNER_TEXT) return;
@@ -338,37 +298,7 @@
     els.promoBannerText.textContent = CONFIG.PROMO_BANNER_TEXT;
   }
 
-  function setupWhatsAppQR() {
-    if (!CONFIG.WHATSAPP_ENABLED || CONFIG.WHATSAPP_NUMBER === '44XXXXXXXXXX') return;
-    const url = `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(CONFIG.WHATSAPP_MESSAGE)}`;
-    els.qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}&bgcolor=ffffff&color=000000`;
-    els.qrCard.classList.remove('hidden');
-  }
-
-  function setupWeather() {
-    if (!CONFIG.WEATHER_ENABLED) return;
-    els.weatherWidget.classList.remove('hidden');
-    fetchWeather();
-    setInterval(fetchWeather, 600000);
-  }
-
-  async function fetchWeather() {
-    try {
-      const { WEATHER_LAT: lat, WEATHER_LON: lon } = CONFIG;
-      const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`);
-      const data = await res.json();
-      els.weatherTemp.textContent = `${Math.round(data.current.temperature_2m)}°C`;
-      els.weatherDesc.textContent = weatherCodeToText(data.current.weather_code);
-    } catch (_) {
-      els.weatherTemp.textContent = '--°';
-      els.weatherDesc.textContent = CONFIG.WEATHER_LOCATION;
-    }
-  }
-
-  function weatherCodeToText(code) {
-    const map = { 0: 'Clear', 1: 'Mainly clear', 2: 'Partly cloudy', 3: 'Overcast', 45: 'Foggy', 61: 'Rain', 80: 'Showers', 95: 'Thunderstorm' };
-    return map[code] || '—';
-  }
+  // ─── Background Slideshow ───────────────────────────────────────────
 
   function setupSlideshow() {
     if (!CONFIG.BACKGROUND_SLIDESHOW || CONFIG.BACKGROUND_IMAGES.length < 2) return;
@@ -388,9 +318,11 @@
     }, 800);
   }
 
+  // ─── Fullscreen ─────────────────────────────────────────────────────
+
   function setupFullscreen() {
     els.fullscreenBtn.addEventListener('click', toggleFullscreen);
-    document.addEventListener('keydown', (e) => {
+    document.addEventListener('keydown', e => {
       if (e.key === 'F11') { e.preventDefault(); toggleFullscreen(); }
     });
   }
@@ -400,6 +332,8 @@
     else document.exitFullscreen?.();
   }
 
+  // ─── Clock ──────────────────────────────────────────────────────────
+
   function startClock() {
     updateClock();
     setInterval(updateClock, 1000);
@@ -408,15 +342,19 @@
   function updateClock() {
     const now = new Date();
     els.footerClock.textContent = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-    els.footerDate.textContent = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    els.footerDate.textContent  = now.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   }
 
+  // ─── Status ─────────────────────────────────────────────────────────
+
   function setStatus(text, state) {
-    const dot = els.statusIndicator.querySelector('.status-dot');
+    const dot   = els.statusIndicator.querySelector('.status-dot');
     const label = els.statusIndicator.querySelector('.status-text');
-    dot.className = 'status-dot ' + (state || '');
+    dot.className  = 'status-dot ' + (state || '');
     label.textContent = text;
   }
+
+  // ─── Storage ────────────────────────────────────────────────────────
 
   function saveToStorage(key, data) {
     try { localStorage.setItem(key, JSON.stringify(data)); } catch (_) {}
@@ -426,15 +364,15 @@
     try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; } catch (_) { return null; }
   }
 
+  // ─── Utilities ──────────────────────────────────────────────────────
+
   function escapeHtml(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
   }
 
-  function formatTime(date) {
-    return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
-  }
+  // ─── Start ──────────────────────────────────────────────────────────
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
