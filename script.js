@@ -123,6 +123,8 @@
 
     const apply = () => {
       document.body.dataset.activePage = page.id;
+      const bgSrc = page.bgImage || `assets/${page.id}_bg.jpg`;
+      setBackgroundImage(bgSrc, !animate);
       els.mainTitle.textContent = page.title;
       els.pageSubtitle.textContent = page.subtitle || CONFIG.SUBTITLE;
       els.animalSilhouette.innerHTML = SILHOUETTES[page.silhouette] || '';
@@ -341,12 +343,20 @@
     }, CONFIG.SLIDESHOW_INTERVAL_MS);
   }
 
-  function setBackgroundImage(src) {
-    els.slideshowBg.style.opacity = '0';
-    setTimeout(() => {
+  function setBackgroundImage(src, instant) {
+    if (instant) {
+      els.slideshowBg.style.transition = 'none';
       els.slideshowBg.style.backgroundImage = `url('${src}')`;
       els.slideshowBg.style.opacity = '1';
-    }, 800);
+      els.slideshowBg.offsetHeight; // force reflow
+      els.slideshowBg.style.transition = 'opacity 1s ease';
+    } else {
+      els.slideshowBg.style.opacity = '0';
+      setTimeout(() => {
+        els.slideshowBg.style.backgroundImage = `url('${src}')`;
+        els.slideshowBg.style.opacity = '1';
+      }, 800);
+    }
   }
 
   // ─── Fullscreen ─────────────────────────────────────────────────────
