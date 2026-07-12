@@ -30,7 +30,7 @@ const CONFIG = {
     {
       id: 'chicken',
       title: 'CHICKEN',
-      sheetName: 'Sheet1',
+      sheetName: 'chickn',
       subtitle: 'List PRICE!',
       silhouette: 'chicken',
       imageFolder: 'assets/chicken',
