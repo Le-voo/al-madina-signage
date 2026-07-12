@@ -287,7 +287,7 @@ html, body {
 /* ── Card text ──────────────────────────────────────────────────────── */
 .product-name {
   font-family: var(--font-display);
-  font-size: clamp(0.7rem, 1.6vw, 1.15rem);
+  font-size: clamp(0.95rem, 2.1vw, 1.65rem);
   font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
   color: var(--theme-light);
   margin-bottom: clamp(6px, 0.8vh, 12px);
