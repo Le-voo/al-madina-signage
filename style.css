@@ -239,14 +239,86 @@ html, body {
   max-height: 100%;
 }
 
-/* Columns per page type */
+/* Default columns per page type */
 .menu-grid[data-page="beef"]    { grid-template-columns: repeat(3, 1fr); padding: clamp(4px, 0.6vh, 8px) clamp(100px, 13vw, 220px); }
 .menu-grid[data-page="chicken"] { grid-template-columns: repeat(3, 1fr); }
 .menu-grid[data-page="lamb"]    { grid-template-columns: repeat(4, 1fr); padding: clamp(4px, 0.6vh, 8px) clamp(30px, 4vw, 70px); }
 
-/* Align last single card on bottom row to center/end dynamically */
-.menu-grid[data-page="beef"] .menu-card:nth-child(7)  { grid-column: 3; }
-.menu-grid[data-page="lamb"] .menu-card:nth-child(13) { grid-column: 4; }
+/* ── Count-Based Dynamic Grid Overrides & Font Scaling ── */
+
+/* 1 to 6 items -> Clean 3-column layout with larger margins */
+.menu-grid[data-count="1"], .menu-grid[data-count="2"], .menu-grid[data-count="3"],
+.menu-grid[data-count="4"], .menu-grid[data-count="5"], .menu-grid[data-count="6"] {
+  grid-template-columns: repeat(3, 1fr) !important;
+  padding: clamp(10px, 2vh, 24px) clamp(120px, 15vw, 240px) !important;
+}
+
+/* 10 to 14 items -> 4-column layout */
+.menu-grid[data-count="10"], .menu-grid[data-count="11"], .menu-grid[data-count="12"],
+.menu-grid[data-count="13"], .menu-grid[data-count="14"] {
+  grid-template-columns: repeat(4, 1fr) !important;
+  padding: clamp(4px, 0.6vh, 8px) clamp(30px, 4vw, 70px) !important;
+  gap: clamp(6px, 0.9vh, 12px) clamp(8px, 1.2vw, 15px) !important;
+}
+
+/* 15 to 19 items -> 5-column layout & size reductions */
+.menu-grid[data-count="15"], .menu-grid[data-count="16"], .menu-grid[data-count="17"],
+.menu-grid[data-count="18"], .menu-grid[data-count="19"] {
+  grid-template-columns: repeat(5, 1fr) !important;
+  padding: clamp(4px, 0.5vh, 6px) clamp(15px, 2.5vw, 45px) !important;
+  gap: clamp(5px, 0.7vh, 10px) clamp(6px, 0.9vw, 12px) !important;
+}
+.menu-grid[data-count="15"] .menu-card,
+.menu-grid[data-count="16"] .menu-card,
+.menu-grid[data-count="17"] .menu-card,
+.menu-grid[data-count="18"] .menu-card,
+.menu-grid[data-count="19"] .menu-card {
+  padding: clamp(6px, 1vh, 12px) clamp(6px, 1vw, 14px) !important;
+}
+.menu-grid[data-count="15"] .product-name,
+.menu-grid[data-count="16"] .product-name,
+.menu-grid[data-count="17"] .product-name,
+.menu-grid[data-count="18"] .product-name,
+.menu-grid[data-count="19"] .product-name {
+  font-size: clamp(0.75rem, 1.5vw, 1.25rem) !important;
+  margin-bottom: clamp(4px, 0.5vh, 8px) !important;
+}
+.menu-grid[data-count="15"] .product-price,
+.menu-grid[data-count="16"] .product-price,
+.menu-grid[data-count="17"] .product-price,
+.menu-grid[data-count="18"] .product-price,
+.menu-grid[data-count="19"] .product-price {
+  font-size: clamp(1rem, 2.3vw, 1.95rem) !important;
+}
+
+/* 20+ items -> 6-column layout & extra size reductions */
+.menu-grid[data-count^="2"], 
+.menu-grid[data-count^="3"],
+.menu-grid[data-count^="4"] {
+  grid-template-columns: repeat(6, 1fr) !important;
+  padding: clamp(4px, 0.4vh, 6px) clamp(10px, 1.5vw, 30px) !important;
+  gap: clamp(4px, 0.5vh, 8px) clamp(5px, 0.7vw, 10px) !important;
+}
+.menu-grid[data-count^="2"] .menu-card,
+.menu-grid[data-count^="3"] .menu-card,
+.menu-grid[data-count^="4"] .menu-card {
+  padding: clamp(4px, 0.8vh, 10px) clamp(4px, 0.7vw, 10px) !important;
+}
+.menu-grid[data-count^="2"] .product-name,
+.menu-grid[data-count^="3"] .product-name,
+.menu-grid[data-count^="4"] .product-name {
+  font-size: clamp(0.65rem, 1.2vw, 1.05rem) !important;
+  margin-bottom: clamp(2px, 0.3vh, 5px) !important;
+}
+.menu-grid[data-count^="2"] .product-price,
+.menu-grid[data-count^="3"] .product-price,
+.menu-grid[data-count^="4"] .product-price {
+  font-size: clamp(0.85rem, 1.8vw, 1.6rem) !important;
+}
+
+/* Center odd-one-out final items in the grid */
+.menu-grid[data-count="7"] .menu-card:nth-child(7) { grid-column: 2 !important; }
+.menu-grid[data-count="13"] .menu-card:nth-child(13) { grid-column: 2 / span 2 !important; }
 
 /* ── Advanced, High-End Menu Card ───────────────────────────────────── */
 .menu-card {
