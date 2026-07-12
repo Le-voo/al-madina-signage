@@ -122,6 +122,7 @@
     const items = pageData[page.id] || page.fallback;
 
     const apply = () => {
+      document.body.dataset.activePage = page.id;
       els.mainTitle.textContent = page.title;
       els.pageSubtitle.textContent = page.subtitle || CONFIG.SUBTITLE;
       els.animalSilhouette.innerHTML = SILHOUETTES[page.silhouette] || '';
