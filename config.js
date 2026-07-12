@@ -50,7 +50,7 @@ const CONFIG = {
     {
       id: 'lamb',
       title: 'LAMB',
-      sheetName: 'Lamb',
+      sheetName: 'Lamb ',
       subtitle: 'List PRICE!',
       silhouette: 'lamb',
       imageFolder: 'assets/lamb',
@@ -74,7 +74,7 @@ const CONFIG = {
     {
       id: 'beef',
       title: 'BEEF',
-      sheetName: 'Beef',
+      sheetName: 'Beef ',
       subtitle: 'List PRICE!',
       silhouette: 'beef',
       imageFolder: 'assets/beef',
