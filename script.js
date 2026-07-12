@@ -212,6 +212,11 @@
     }).filter(Boolean);
   }
 
+  // Fingerprint a menu array so we can detect duplicate sheet responses
+  function menuFingerprint(menu) {
+    return menu.slice(0, 5).map(i => i.product + '|' + i.price).join(',');
+  }
+
   async function fetchAllPages() {
     if (CONFIG.GOOGLE_SHEET_ID === 'YOUR_SHEET_ID_HERE') {
       setStatus('Set your Sheet ID in config.js', 'offline');
@@ -219,20 +224,45 @@
     }
 
     let anyLive = false;
+    // When a tab doesn't exist, Google silently returns Sheet1 data.
+    // We fetch pages in order and store the FIRST (default) page fingerprint.
+    // Any subsequent page whose data matches the default fingerprint is skipped.
+    let defaultFingerprint = null;
 
     for (const page of CONFIG.PAGES) {
       try {
         const menu = await fetchSheet(page.sheetName);
-        if (menu.length > 0) {
-          const old = pageData[page.id] || [];
-          const changed = hasMenuChanged(menu, old);
-          pageData[page.id] = menu;
-          saveToStorage(STORAGE_PREFIX + page.id, menu);
-          anyLive = true;
+        if (menu.length === 0) continue;
 
-          if (page.id === getCurrentPage().id) {
-            renderMenu(menu, page, changed);
+        const fp = menuFingerprint(menu);
+
+        // First page sets the reference fingerprint (this is Sheet1 / chicken)
+        if (defaultFingerprint === null) {
+          defaultFingerprint = fp;
+        } else if (fp === defaultFingerprint) {
+          // This tab doesn't exist — Google returned Sheet1 data again.
+          // Clear any wrong data that may have been cached from before.
+          const cachedKey = STORAGE_PREFIX + page.id;
+          const cached = loadFromStorage(cachedKey);
+          if (cached && menuFingerprint(cached) === defaultFingerprint) {
+            localStorage.removeItem(cachedKey);
+            pageData[page.id] = page.fallback;
+            if (page.id === getCurrentPage().id) {
+              renderMenu(page.fallback, page, true);
+            }
           }
+          console.warn(`Tab "${page.sheetName}" not found — using fallback prices for ${page.id}`);
+          continue; // Skip — don't overwrite with wrong data
+        }
+
+        const old = pageData[page.id] || [];
+        const changed = hasMenuChanged(menu, old);
+        pageData[page.id] = menu;
+        saveToStorage(STORAGE_PREFIX + page.id, menu);
+        anyLive = true;
+
+        if (page.id === getCurrentPage().id) {
+          renderMenu(menu, page, changed);
         }
       } catch (err) {
         console.warn(`Fetch error (${page.sheetName}):`, err.message);
